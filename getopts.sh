@@ -36,6 +36,11 @@ do
 	esac
 done
 
+mkdir temp
+cd temp
+wget icarus.cs.weber.edu/~hvalle/cs3030/MOCK_DATA_$year.tar.gz
+tar -vxzf MOCK_DATA_$year.tar.gz
+
 exit 0
 
 
