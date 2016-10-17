@@ -7,7 +7,7 @@
 # 
 #   DESCRIPTION: 
 # 
-#        AUTHOR: Matthew Smith (), matthewsmith4@mail.weber.edu
+#        AUTHOR: Matthew Smith, Jeremy Marcusen, Alex Cragun, matthewsmith4@mail.weber.edu
 #  ORGANIZATION: 
 #       CREATED: 10/15/2016 16:05
 #      REVISION:  ---
@@ -37,15 +37,22 @@ fi
 
 if [[ -z $email ]]
 then
-	set $email="waldo@weber.edu"
+	email="waldo@weber.edu"
 fi
+
+echo "Email set to: $email"
 
 #Make temp file and decompress
 echo "Aquiring data"
-`mkdir temp`
-`cd temp`
+
+if [[ ! -d temp ]]
+then
+	`mkdir ./temp`
+fi
+`cd ./temp`
+
 `wget icarus.cs.weber.edu/~hvalle/cs3030/MOCK_DATA_$year.tar.gz`
-`tar -vxzf MOCK_DATA_$year.tar.gz`
+`tar -xzf MOCK_DATA_$year.tar.gz`
 
 echo "Filtering Data"
 
@@ -65,15 +72,20 @@ HOST=137.190.19.87
 USER=$USER
 PASSWORD=$psswrd
 
-`ftp -inv $HOST << EOF`
+`ftp -inv $HOST << EOF
 user $USER $PASSWORD
 cd
 bye
-EOF
+EOF`
 
 `cd ..`
 `rm -r temp`
+`rm MOCK_*`
 
 echo "Data deposited"
+#mail
+`mail -s "FTP" $email <<< 'Successfull FTP to server'`
+
+#crontab -e then * */6 * * * ./home/user/dirs/batraccoon_hw4.sh is how to use the cronjob properly
 
 exit 0
